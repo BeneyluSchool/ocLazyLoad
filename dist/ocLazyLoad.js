@@ -202,7 +202,10 @@
                     if (angular.isDefined(runBlocks[moduleName]) && (newModule || params.rerun)) {
                         tempRunBlocks = tempRunBlocks.concat(runBlocks[moduleName]);
                     }
-                    _invokeQueue(providers, moduleFn._invokeQueue, moduleName, params.reconfig);
+                    // fix ng reload https://github.com/ocombe/ocLazyLoad/issues/225
+                    if (newModule) {
+                        _invokeQueue(providers, moduleFn._invokeQueue, moduleName, params.reconfig);
+                    }
                     _invokeQueue(providers, moduleFn._configBlocks, moduleName, params.reconfig); // angular 1.3+
                     broadcast(newModule ? 'ocLazyLoad.moduleLoaded' : 'ocLazyLoad.moduleReloaded', moduleName);
                     registerModules.pop();
