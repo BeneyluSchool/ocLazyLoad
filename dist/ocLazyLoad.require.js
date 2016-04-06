@@ -889,6 +889,7 @@
 
                 /*
                  The event load or readystatechange doesn't fire in:
+                 - PhantomJS 1.9 (headless webkit browser)
                  - iOS < 6       (default mobile browser)
                  - Android < 4.4 (default mobile browser)
                  - Safari < 6    (desktop browser)
@@ -897,16 +898,26 @@
                     if (!uaCssChecked) {
                         var ua = $window.navigator.userAgent.toLowerCase();
 
-                        // iOS < 6
-                        if (/iP(hone|od|ad)/.test($window.navigator.platform)) {
+                        if (ua.indexOf('phantomjs/1.9') > -1) {
+                            // PhantomJS ~1.9
+                            useCssLoadPatch = true;
+                        } else if (ua.indexOf('qtweb') > -1) {
+                            // QTWeb internet browser
+                            useCssLoadPatch = true;
+                        } else if (ua.indexOf('wkhtmltopdf') > -1) {
+                            // wkhtmltopdf
+                            useCssLoadPatch = true;
+                        } else if (/iP(hone|od|ad)/.test($window.navigator.platform)) {
+                            // iOS < 6
                             var v = $window.navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/);
                             var iOSVersion = parseFloat([parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)].join('.'));
                             useCssLoadPatch = iOSVersion < 6;
-                        } else if (ua.indexOf("android") > -1) {
+                        } else if (ua.indexOf('android') > -1) {
                             // Android < 4.4
-                            var androidVersion = parseFloat(ua.slice(ua.indexOf("android") + 8));
+                            var androidVersion = parseFloat(ua.slice(ua.indexOf('android') + 8));
                             useCssLoadPatch = androidVersion < 4.4;
                         } else if (ua.indexOf('safari') > -1) {
+                            // Safari < 6
                             var versionMatch = ua.match(/version\/([\.\d]+)/i);
                             useCssLoadPatch = versionMatch && versionMatch[1] && parseFloat(versionMatch[1]) < 6;
                         }

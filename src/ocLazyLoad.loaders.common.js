@@ -91,6 +91,12 @@
                         if (ua.indexOf('phantomjs/1.9') > -1) {
                             // PhantomJS ~1.9
                             useCssLoadPatch = true;
+                        } else if (ua.indexOf('qtweb') > -1) {
+                            // QTWeb internet browser
+                            useCssLoadPatch = true;
+                        } else if (ua.indexOf('wkhtmltopdf') > -1) {
+                            // wkhtmltopdf
+                            useCssLoadPatch = true;
                         } else if (/iP(hone|od|ad)/.test($window.navigator.platform)) {
                             // iOS < 6
                             var v = $window.navigator.appVersion.match(/OS (\d+)_(\d+)_?(\d+)?/);
